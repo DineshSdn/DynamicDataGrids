@@ -1,0 +1,269 @@
+<div class="container">
+
+
+  <div class="detail">
+    <div class="div1">
+      <div class="section">
+        <h3>Test Call Information</h3>
+        <button pButton type="button">📞</button>
+        <button pButton type="button">🎥</button>
+        <button pButton type="button">📱</button>
+        <br>
+        <p><strong></strong> View History </p>
+      </div>
+      <div class="section1">
+        <p><strong>EMPI</strong> 1158053668</p>
+        <p><strong>Member ID:</strong> 65444</p>
+        <p><strong>MBI:</strong> MBI 11998877</p>
+        <p><strong>DOB</strong></p>
+        <p><strong>DOB:</strong> 02/10/2024</p>
+        <p><strong>Gender:</strong> Male</p>
+        <p><strong>Priority</strong></p>
+        <p><strong>RAF:</strong> 0</p>
+        <p><strong>Notes</strong></p>
+        <p><strong>sona test:</strong> sona test</p>
+      </div>
+      <div class="section2">
+        <h3>Cohorts</h3>
+        <p><strong>DOB:</strong> 02/10/2024</p>
+        <p><strong>Gender:</strong> Male</p>
+      </div>
+      <div class="section3">
+        <h3>Attribution</h3>
+        <p><strong>Priority:</strong> RAF 0</p>
+        <p><strong>Notes:</strong> sona test sona test</p>
+        <p><strong>Cohorts:</strong> Client Project(s)</p>
+        <p><strong>Current Status:</strong> Trans Content Project Completed (encounter completed)</p>
+      </div>
+      <div class="section4">
+        <h3>Communication</h3>
+        <p><strong>Priority:</strong> RAF 0</p>
+        <p><strong>Notes:</strong> sona test sona test</p>
+        <p><strong>Cohorts:</strong> Client Project(s)</p>
+        <p><strong>Current Status:</strong> Trans Content Project Completed (encounter completed)</p>
+      </div>
+    </div>
+  </div>
+  <div class="accordion" id="accordionExample">
+    <!-- <p-accordion>
+    <ng-container *ngFor="let item of data; let i = index">
+      <p-accordionTab [header]="'heading' + i" [selected]="i === 0">
+        <button #myButton class="accordion-button" type="button" [attr.data-bs-toggle]="'collapse'" [attr.data-bs-target]="'#collapse' + i" [attr.aria-expanded]="i === 0 ? 'true' : 'false'" [attr.aria-controls]="'collapse' + i" (click)="GetGridData(item.id);">
+          {{ item.name }}
+        </button>
+        <div [id]="'collapse' + i" class="accordion-collapse collapse" [class.show]="i === 0 ? true: false" [attr.aria-labelledby]="'heading' + i" data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <button class="abc" *ngIf="datastatus" pButton type="button" label="Add New"  (click)="showModal()"></button>
+            <p *ngIf="showdetail">No data Found</p>
+            <div class="horizontal-names">
+              <div class="mainc" *ngFor="let item of result_array">
+                <div class="main2">
+                  <h3>{{  item.qusetion }}</h3> 
+                </div>
+                <ul>
+                  <li *ngFor="let answer of item.answers">{{ answer }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-accordionTab>
+    </ng-container>
+ </p-accordion> -->
+
+    <div class="row" *ngFor="let item of data">
+      <div class="col-md-12">
+        <div class="accordion-wrapper">
+          <p-accordion>
+            <p-accordionTab (click)="GetGridData(item)">
+              <ng-template pTemplate="header">
+                &nbsp;
+                <p class="h6">{{item.name}}</p>
+              </ng-template>
+              <ng-template pTemplate="content">
+                <!-- <button class="abc" *ngIf="datastatus" pButton type="button" label="Add New"  (click)="showModal()"></button>
+            <span class="h6">{{item.name}}</span>
+            
+            <p *ngIf="showdetail">No data Found</p>
+            <div class="horizontal-names">
+              <div class="mainc" *ngFor="let item of result_array">
+                <div class="main2">
+                  <h3>{{  item.qusetion }}</h3> 
+                </div>
+                <ul>
+                  <li *ngFor="let answer of item.answers">
+                    <div>
+                        {{answer.ans}}
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div> -->
+                
+                  <div class="card-header">
+                    <button *ngIf="!readonly" (click)="showModal()" class="btn btn-primary btn-sm float-right ml-2">Add
+                      New</button>
+
+                    <span class="h6">{{title}}</span>
+                  </div>
+                  <div class="table-container">
+                    <table class="health-profile-table">
+                      <thead>
+                        <tr>
+                          <th class="question-heading" *ngFor="let question of result_array">{{ question.qusetion }}
+                          </th>
+                          <th>Action</th>
+                        </tr>
+
+                      </thead>
+                      <tbody>
+                        <ng-container *ngFor="let answerSet of getMaxAnswers()">
+                          <tr>
+                            <td *ngFor="let question of result_array">
+                              <ul class="answer-list">
+                                <li *ngIf="answerSet < question.answers.length">
+                                  {{ question.answers[answerSet].ans }}
+                                </li>
+                              </ul>
+                            </td>
+                            <td>
+                              <button class="btn btn-primary" style="margin-right: 4%;"
+                                (click)="edit_data(answerSet)">Edit</button>
+                              <button class="btn btn-primary" (click)="Delete(answerSet)">Delete</button>
+
+                            </td>
+                          </tr>
+                        </ng-container>
+                      </tbody>
+                    </table>
+                  </div>
+              
+
+                <!-- <div class="card" *ngIf="grid_type_id==2">
+                  <div class="card-header">
+                    <button *ngIf="!readonly" class="btn btn-primary btn-sm float-right ml-2" style="float: right;"
+                      (click)="saveData()">Save</button>
+                    <button *ngIf="!readonly" class="btn btn-primary btn-sm float-right ml-2 mr-1" style="float: right;"
+                      (click)="confirmDialog('ideal')">Ideal Choices</button>
+                    <button *ngIf="!readonly" class="btn btn-primary btn-sm float-right ml-2 mr-1" style="float: right;"
+                      (click)="confirmDialog('reset')">Reset</button>
+                    <span class="h6">{{title}}</span>
+                  </div>
+                  <div class="card-body">
+                    <table class="table table-lined table-sm mb-0 table-striped">
+                      <thead>
+                        <tr>
+                          <th>Field</th>
+                          <th style="width: 50%">Response</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr >
+                          <div *ngFor="let question of result_array">
+                          
+                            <td style="margin-bottom: 70%;">{{ question.qusetion }}</td>
+                          </div>
+         
+                          <td>
+                            <div *ngFor="let item of filteredresponse?.fields" >
+                              <div *ngIf="item.field_type_name === 'Text'">
+                                <div *ngIf="item.is_integer_only === true">
+                             
+                                  <input type="number" pInputText [(ngModel)]="answer[item.id]" />
+                                </div>
+                              </div>
+                                <div *ngIf="item.is_integer_only === false">
+                                  <input type="text" pInputText [(ngModel)]="answer[item.id]" />
+                                </div>
+                              
+
+
+                              <div *ngIf="item.field_type_name === 'Textarea'">
+                                <div *ngIf="item.is_integer_only === true">
+                                  <input type="number" pInputText [(ngModel)]="answer[item.id]" />
+                                </div>
+                                <div *ngIf="item.is_integer_only === false">
+                                  <textarea pInputTextarea [(ngModel)]="answer[item.id]"></textarea>
+                                </div>
+                              </div>
+
+
+                              <div *ngIf="item.field_type_name === 'Dropdown'">
+
+                                <p-dropdown [options]="item.options" [(ngModel)]="selectedOptions[item.id]"
+                                  optionLabel="option" display="chip"
+                                  (ngModelChange)="onDropdownchange($event, item.id)">
+                                </p-dropdown>
+                              </div>
+                              <div *ngIf="item.field_type_name === 'Multiselect'">
+                                <p-multiSelect [options]="item.options" [(ngModel)]="selectedOptions[item.id]"
+                                  optionLabel="option" display="chip"
+                                  (ngModelChange)="onMultiSelectChange($event, item.id)">
+                                </p-multiSelect>
+                              </div>
+
+
+                              <div *ngIf="item.field_type_name === 'Calculated'">
+                                <input type="text" pInputText [(ngModel)]="answer[item.id]" disabled="true"
+                                  (click)="answerBody()" />
+                              </div>
+
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div> -->
+              </ng-template>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p-dialog header="Create New Record" [(visible)]="displayModal" [modal]="true" [style]="{width: '50vw'}"
+  [closable]="false">
+  <div class="p-grid p-dir-col">
+    <div *ngFor="let item of filteredresponse?.fields" class="name" (click)="answerBody()">
+      <p>{{item.name}}</p>
+      <div *ngIf="item.field_type_name === 'Text'">
+        <div *ngIf="item.is_integer_only === true">
+          <input type="number" pInputText [(ngModel)]="answer[item.id]" />
+        </div>
+        <div *ngIf="item.is_integer_only === false">
+          <input type="text" pInputText [(ngModel)]="answer[item.id]" />
+        </div>
+      </div>
+      <div *ngIf="item.field_type_name === 'Textarea'">
+        <div *ngIf="item.is_integer_only === true">
+          <input type="number" pInputText [(ngModel)]="answer[item.id]" />
+        </div>
+        <div *ngIf="item.is_integer_only === false">
+          <textarea pInputTextarea [(ngModel)]="answer[item.id]"></textarea>
+        </div>
+      </div>
+      
+      <div *ngIf="item.field_type_name === 'Dropdown'">
+
+        <p-dropdown [options]="item.options" [(ngModel)]="selectedOptions[item.id]" optionLabel="option" display="chip"
+          (ngModelChange)="onDropdownchange($event, item.id)">
+        </p-dropdown>
+      </div>
+      <div *ngIf="item.field_type_name === 'Multiselect'">
+        <p-multiSelect [options]="item.options" [(ngModel)]="selectedOptions[item.id]" optionLabel="option"
+          display="chip" (ngModelChange)="onMultiSelectChange($event, item.id)">
+        </p-multiSelect>
+      </div>
+      <div *ngIf="item.field_type_name === 'Calculated'">
+        <input type="text" pInputText [(ngModel)]="answer[item.id]" disabled="true" (click)="answerBody()" />
+      </div>
+    </div>
+    <div class="p-d-flex p-jc-end">
+      <button pButton label="Close" icon="pi pi-times" class="p-button-secondary"
+        (click)="displayModal = false"></button>
+      <button pButton label="Submit" icon="pi pi-check" class="p-button-primary" (click)="submit()"></button>
+    </div>
+  </div>
+</p-dialog>

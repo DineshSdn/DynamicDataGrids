@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Domain.Entities
+{
+    public class Response
+    {
+        public int id {  get; set; }    
+        public int userid { get; set; } 
+        public int gridid { get; set; }
+        public int questionid { get; set; } 
+        public string question { get; set; }    
+         public string response { get; set; }   
+        public DateTime time { get; set; }  
+    }
+}

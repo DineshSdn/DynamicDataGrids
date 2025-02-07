@@ -1,0 +1,297 @@
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+}
+/* Ensure the detail and accordion sections are displayed side by side */
+.container {
+  display: flex;
+  margin-top: 3%;
+}
+
+.detail, .accordion {
+  flex: 1; /* Both divs will take equal width */
+  margin-right: 30px; /* Add space between divs */
+}
+
+.accordion
+{
+ 
+  min-width: 90%;
+}
+
+.detail {
+  flex: 2; /* Both divs will take equal width */
+  /* margin-right: 10px; Add space between divs */
+  border: 2px solid white; 
+}
+.detail
+{
+ 
+  min-width: 30%;
+  background-color: rgb(240, 240, 240);
+ 
+}
+
+.section
+{
+  align-items: center;
+  padding-top: 4%;
+  padding-bottom: 2%;
+  padding-left: 6%;
+  background-color: rgb(16, 29, 211);
+  color: aliceblue;
+}
+.section h3
+{
+  color: aliceblue;
+}
+.section button
+{
+  background-color: rgb(16, 29, 211);
+}
+
+.section1
+{
+ text-align:justify;
+ padding-left: 2%;
+ padding: 5%;
+ background-color: rgb(240, 240, 240);
+}  
+
+
+.section2
+{
+  text-align:justify;
+  background-color: rgb(240, 240, 240);
+}
+.section2 h3
+{
+  padding-left: 2%;
+  background-color: gainsboro;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+.section2 p
+{
+  padding-left: 5%;
+}
+
+
+.section3 h3
+{
+  padding-left: 2%;
+
+  background-color: gainsboro;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+
+.section3 p
+{
+  padding-left: 5%;
+}
+
+.section4 h3{
+  background-color: gainsboro;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  padding-left: 2%;
+}
+
+.section4 p
+{
+  padding-left: 5%;
+}
+.section3
+{
+  background-color: rgb(240, 240, 240);
+}
+.section4
+{
+  background-color: rgb(240, 240, 240);
+}
+
+.horizontal-names {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.mainc {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 0;
+}
+
+.main2 h3 {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  margin: 0;
+  padding: 10px;
+  text-align: center;
+}
+
+/* ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  /* border-left: 1px solid #ddd; */
+  /* border-right: 1px solid #ddd; 
+}
+
+li {
+  /* border-top: 1px solid #ddd; 
+  padding: 10px;
+  text-align: center;
+  /* border-bottom: 1px solid #ddd; 
+} */
+
+.mainc:not(:first-child) ul {
+  /* border-left: none; */
+}
+
+.mainc:last-child ul {
+  /* border-right: 1px solid #ddd; */
+}
+
+.abc
+{
+  margin-left: 80%;
+  margin-bottom: 2%;
+
+}
+
+/* dialog setting */
+
+/* your-component.component.css */
+
+/* Use ::ng-deep to apply styles to PrimeNG components */
+::ng-deep .p-dialog .p-dialog-header {
+  background-color: #007ad9; /* Custom header background color */
+  color: white; /* Custom header text color */
+}
+
+::ng-deep .p-dialog .p-dialog-content {
+  padding: 20px;
+}
+
+::ng-deep .p-dialog .p-dialog-footer {
+  padding: 10px 20px;
+  background-color: #f1f1f1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Input styles */
+::ng-deep .p-inputtext, 
+::ng-deep .p-inputtextarea, 
+::ng-deep .p-dropdown, 
+::ng-deep .p-multiselect {
+  width: 100%; /* Full width inputs */
+  margin-top: 10px; /* Spacing between elements */
+  box-sizing: border-box;
+}
+
+::ng-deep .p-dropdown, 
+::ng-deep .p-multiselect {
+  margin-bottom: 10px;
+}
+
+/* Button styles */
+::ng-deep .p-button {
+  margin-left: 10px; /* Space between buttons */
+}
+
+::ng-deep .p-button-primary {
+  background-color: #007ad9; /* Primary button color */
+  border-color: #007ad9;
+}
+
+::ng-deep .p-button-primary:hover {
+  background-color: #005fa3; /* Hover color for primary button */
+  border-color: #005fa3;
+}
+
+::ng-deep .p-button-secondary {
+  background-color: #f1f1f1; /* Secondary button color */
+  color: black;
+  border: 1px solid #dcdcdc;
+}
+
+::ng-deep .p-button-secondary:hover {
+  background-color: #dcdcdc; /* Hover color for secondary button */
+}
+
+/* Custom grid and layout styles */
+::ng-deep .p-grid.p-dir-col {
+  display: flex;
+  flex-direction: column;
+}
+
+::ng-deep .name {
+  margin-bottom: 15px; /* Space between form groups */
+}
+
+::ng-deep .p-d-flex.p-jc-end {
+  justify-content: flex-end;
+}
+
+::ng-deep p {
+  margin: 0; /* Remove default margin from p tags */
+  font-weight: bold; /* Make field names bold */
+}
+
+::ng-deep .p-dialog .p-dropdown, 
+::ng-deep .p-dialog .p-multiselect, 
+::ng-deep .p-dialog .p-inputtext, 
+::ng-deep .p-dialog .p-inputtextarea {
+  margin-bottom: 1rem; /* Space between inputs */
+}
+
+/* Ensure the p-dialog width is responsive */
+::ng-deep .p-dialog {
+  max-width: 600px; /* Maximum width */
+  width: 50vw; /* 50% of the viewport width */
+}
+
+
+.table-container {
+  margin: 20px;
+}
+
+.health-profile-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.health-profile-table th, .health-profile-table td {
+  padding: 10px;
+  text-align: left;
+  border: none; /* Remove borders from all table cells */
+}
+
+.health-profile-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.health-profile-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.health-profile-table tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+.answer-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.answer-list li {
+  margin-bottom: 5px;
+}

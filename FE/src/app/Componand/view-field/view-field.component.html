@@ -1,0 +1,740 @@
+<div class="head">
+  <h3 >Clinical Assets</h3>
+  <p>Configure and build assessment materials, coding guidelines and clinical reference material.</p>
+</div>
+
+<div class="wrapper vertical" id="wrapper">
+    <main role="main" class="main-content" >
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12">
+                    <h4 style="font-weight:bold ; font-size:25px">Clinical Assets</h4>
+                    <p>Configure and build assessment materials, coding guidelines and clinical reference material.</p>
+                    <div class="tab-wrapper p-tabview-panels-transparent">
+                        <router-outlet></router-outlet>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+<div>
+  <br>
+    <div class="d-flex mb-1 align-items-center">
+        <div class="flex-grow-1" >
+           <div class="mb-01">{{data[0].head_name}} 
+                <span class="badge badge-secondary">{{data[0].name}}</span></div>
+            
+                <p>{{data[0].description}}</p>
+        </div>
+        <div class="ml-auto">
+            <a class="btn btn-primary rounded-pill" (click)="back()">Back to all datagrids</a>
+        </div>
+    </div>
+    </div>
+   
+    <br>
+    <div class="showin" style="display: flex; align-items: center;">
+      <input type="checkbox" id="myCheckbox" style="transform: scale(1.5); margin-right: 8px;" checked disabled>
+      <label for="myCheckbox">Show In Health Profile</label>
+  </div>
+
+
+
+
+  <div class="newdiv" (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+   
+    <div class="preview-details">
+      <p style="display: inline-block; margin-right: 169px;"><b>  Preview Tabuler </b> </p>
+      <p style="display: inline-block; color: rgb(207, 195, 195);">Drag and drop order of columns to change/set display order</p>
+      </div>
+  <hr>
+  <div class="topbutton">
+      <button class="blue-button" disabled>Add-New</button>
+  </div>
+    <div class="MyQuestionContainer">
+      
+      <div class="MyQuestion1" *ngFor="let question of res123.fields; let i = index"
+        draggable="true"(dragstart)="onDragStart($event, question)" >
+        <p>{{ question.name }}</p>
+      </div>
+   
+      <div class="actiondiv">
+        <p>Action</p>
+        <div class="buttons">
+            <button class="blue-button" disabled >Add/Edit</button>
+            <button class="blue-button" disabled >Delete</button>
+        </div>
+    </div>
+    
+    </div>
+  </div>
+   
+    <div class="container">
+     
+      <div class="field123">
+        <div class="fields-container d-flex justify-content-between align-items-center">
+          <div class="fields">
+              <h5>Fields</h5>
+          </div>
+          <div class="ml-auto1">
+              <a class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" (click)="create()">Create New</a>
+          </div>
+      </div>
+    
+        <div>
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Search..." (keyup)="search()">
+          <!-- <button type="button" (click)="search()">Search</button>      -->
+        </div>
+      </div>
+          
+    <div class="card-body m-1 p-3" *ngIf="showDgFields"style="min-width: 45%;">
+        <div class="card mt-1" *ngFor="let item of filteredresponse.fields" style="border: 2px solid rgb(158, 152, 152);">
+            <div class="card-body p-1">
+                <div class="row m-1">
+                    <div class="col-md-6 ">
+                    
+                      <p class="mb-0 fieldHeader">
+                        <span class="dot dot-lg" [ngClass]="{'bg-danger': !item.status, 'bg-success': item.status }"></span>
+                        {{item.name}} {{item.is_required ? "(required)" : ""}}
+                      </p>
+                      
+                        <span class="badge badge-secondary">{{item.field_type_name}}</span>
+                    </div>
+                    <div class="col-md-6 fieldFontxSmall pr-1 padTop">
+                      <p class="mb-0">Show in Tabular: {{item.show_in_tabular ? "Yes":"No"}} (order {{item.tabular_sort_order}})</p>
+                      <p class="mb-0">Show in Detail: {{item.show_in_detail ? "Yes":"No"}} (order {{item.detail_sort_order}})</p>
+                      <!-- Log values for debugging -->
+                      
+                  </div>
+                </div>
+            </div>
+            <div class="card-footer p-0 fieldFooterBg" style="background-color: rgb(233, 233, 233);">
+                <div class="row m-1 fieldFooterFont" >
+                    <div class="col-md-2 pt-1 footerEdit" >
+                        <a (click)="newFieldModel(item)" icon="pi pi-trash" class="p-button-danger" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Edit</a>
+                    </div>
+                    <div class="col-md-2 p-1 footerEdit">
+                        <a (click)="deleteField(item)"  icon="pi pi-trash" class="p-button-danger" (click)="openDeleteDialog()">Delete</a>
+                    </div>
+                    <div class="col-md-3 p-1 footerSuspect">
+                        <a   (click)="suspectModal(item);showsuspectmodel()"  icon="pi pi-trash" class="p-button-danger" >Suspect ({{item.field_suspects != null ?
+                            item.field_suspects.length : 1}})</a>
+                    </div>
+                    <div class="col-md-3 p-1 footerResponse">
+                        <a (click)="responseModal(item);showresponsemodel()"  icon="pi pi-trash" class="p-button-danger">Responses ({{ Get_Respnse_Count(item.id)}})</a>
+                    </div>
+                    <div class="col-md-3 p-1 footerCptGen">
+                        <a (click)="cptGenModal(item);showcptmodel()" icon="pi pi-trash" class="p-button-danger">CPT Gen ({{item.field_cpt != null ?
+                            item.field_cpt.length : 1}})</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="new_div" (dragover)="onDragOver($event)" (drop)="onDrop1($event)">
+        <p>Preview Detail (view and edit modes)</p>
+        <p style="color: #999;">Drag and drop order of columns to change/set display order</p>
+        <div class="MyQuestion" *ngFor="let question of filteredresponse.fields; let i = index"
+          draggable="true" (dragstart)="onDragStart($event, question)">
+          <p *ngIf="question.show_in_detail">{{ question.name }}</p>
+          <div *ngIf="question.field_type_name === 'Text'">
+            <input type="text" [(ngModel)]="responses[question.id]">
+          </div>
+          <div *ngIf="question.field_type_name === 'Textarea'">
+            <textarea [(ngModel)]="responses[question.id]"></textarea>
+          </div>
+          <div *ngIf="question.field_type_name === 'Calculated'">
+            <input type="text" [(ngModel)]="responses[question.id]"  [disabled]="true">
+          </div>
+          <div *ngIf="question.field_type_name === 'Dropdown'">
+            <select [(ngModel)]="responses[question.id]">
+              <!-- Iterate over your dropdown options -->
+              <option *ngFor="let option of question.options" [value]="option.value">
+                {{ option.option }}
+              </option>
+            </select>
+          </div>
+
+      
+
+
+          <div cdkDragHandle class="form-group" *ngIf="question.field_type_name === 'Multiselect'">
+            <!-- <label>{{question.name}}<label class="required" *ngIf="question.is_required">*</label> -->
+                <!-- <i *ngIf="question.field_tooltip != null" class="pi pi-info-circle fieldFontSize"
+                    [pTooltip]="question.field_tooltip"></i> -->
+            <!-- </label> -->
+            <p-multiSelect [options]="question.options" [filter]="false"
+                panelStyleClass="filter-on" defaultLabel="Select Response"
+                [selectedItemsLabel]="'{0} items selected'" optionLabel="option" optionValue="id"
+                appendTo="body">
+                <p-header class="mychkall">
+                    <span>Select All</span>
+                </p-header> 
+            </p-multiSelect>
+        </div>
+        </div>  
+          </div>
+
+
+
+
+<!-- 
+          try this new code for ng prime -->
+
+
+      
+          <!-- <div *ngIf="question.field_type_name === 'Multiselect'">
+      
+            <div *ngIf="question.field_type_name === 'Multiselect'">
+           
+              <div *ngFor="let option of question.options">
+                <label>
+                  <input type="checkbox" 
+                         [value]="option.value" 
+                         [checked]="responses[question.id]?.includes(option.value)" 
+                         (change)="toggleSelection(question.id, option.option)">
+                  {{ option.option }}
+                </label>
+                
+              </div>
+           
+            </div>
+            
+          </div> -->
+
+
+
+          <!-- new logic -->
+          <!-- <div *ngIf="question.field_type_name === 'Multiselect'">
+            <div cdkDragHandle class="form-group multiselect-container">
+              <label class="multiselect-label">{{ question.name }}</label>
+              <p-multiSelect 
+                [options]="question.options" 
+                [(ngModel)]="responses[question.id]" 
+                optionLabel="label" 
+                placeholder="Select Options"
+                class="custom-multiselect">
+              </p-multiSelect>
+            </div>
+          </div> -->
+
+          <!-- <div *ngIf="question.field_type_name === 'Multiselect'">
+            <div cdkDragHandle class="form-group multiselect-container">
+              <label class="multiselect-label">{{ question.name }}</label>
+              <p-multiSelect 
+                [options]="new_array" 
+                [(ngModel)]="responses[question.id]" 
+                optionLabel="label" 
+                placeholder="Select Options"
+                class="custom-multiselect">
+              </p-multiSelect>
+            </div>
+          </div> -->
+          
+
+       
+          
+          
+           
+      
+
+
+<!-- another logic -->
+<!-- <div *ngIf="question.field_type_name === 'Multiselect'">
+  <ng-multiselect-dropdown #multiSelect
+  [placeholder]="'Select City'" 
+  [data]="data" 
+  [settings]="settings"
+  [disabled]="false"
+>
+</ng-multiselect-dropdown>
+  </div> -->
+
+   
+
+ <!-- <select id="multiselect" multiple [(ngModel)]="responses[question.id]">
+    <option *ngFor="let option of question.options" [ngValue]="option.option">{{ option.option }}</option>
+  </select> -->
+
+  <p-dialog header="{{suspect.Title}}" [(visible)]="showsuspect" [modal]="true" [style]="{width: '50%'}" [baseZIndex]="10000">
+    <div>
+        <div>
+            <label>If value entered is:</label>
+            <select [(ngModel)]="suspect.If_value_entered_is">
+                <option [value]="'Equal'" selected>Equal</option>
+                <option [value]="'Between'">Between</option>
+            </select>
+        </div>
+        <div>
+            <label>Qualifier value:</label>
+            <input type="number" [(ngModel)]="suspect.Qualifier_value">
+        </div>
+        <div>
+            <label>Add this condition as suspect:</label>
+            <input type="text" [(ngModel)]="suspect.Add_this_condition_as_suspect">
+        </div>
+        
+        <!-- Dynamic input fields for new responses -->
+        <div *ngFor="let response of newResponses">
+            <p>----------------------------------------------------------------------</p>
+            <div>
+                <label>If value entered is:</label>
+                <select [(ngModel)]="response.If_value_entered_is">
+                    <option [value]="'Equal'" selected>Equal</option>
+                    <option [value]="'Between'">Between</option>
+                </select>
+            </div>
+            <div>
+                <label>Qualifier value:</label>
+                <input type="number" [(ngModel)]="response.Qualifier_value">
+            </div>
+            <div>
+                <label>Add this condition as suspect:</label>
+                <input type="text" [(ngModel)]="response.Add_this_condition_as_suspect">
+            </div>
+        </div>
+        <div class="buttons_to_save">
+            <div class="but1">
+                <button (click)="save()" type="button">Save</button>
+            </div>
+            <button (click)="addNewResponse()" type="button">Add New Response</button>
+        </div>
+    </div>
+</p-dialog>
+
+
+
+
+
+<!-- <div class="modal fade" id="exampleModalScrollable33" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">{{cpt_gen.title}}</h5>
+                <div class="close_button">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            </div>
+            <div class="modal-body">
+                <div>
+                   
+                    <div>
+                      <label>If value entered is:</label>
+                      <select [(ngModel)]="suspect.If_value_entered_is">
+                        <option [value]="'Equals'" selected>Equal</option>
+                        <option [value]="'Between'">Between</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label>Qualifier value:</label>
+                      <input type="number" [(ngModel)]="cpt_gen.Qualifier_value">
+                    </div>
+                    <div>
+                      <label>Generate prodecural code:</label>
+                      <input type="text" [(ngModel)]="cpt_gen.Genrate_prodecural_code">
+                    </div>
+                   
+                     Dynamic input fields for new responses
+                    <div *ngFor="let response of newResponses">
+                        <p>----------------------------------------------------------------------</p>
+                      <div>
+                        <label>If value entered is:</label>
+                        <select [(ngModel)]="response.If_value_entered_is">
+                          <option [value]="'Equal'" selected>Equal</option>
+                          <option [value]="'Between'">Between</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label>Qualifier value:</label>
+                        <input type="number" [(ngModel)]="response.Qualifier_value">
+                      </div>
+                      <div>
+                        <label>Add this condition as suspect:</label>
+                        <input type="text" [(ngModel)]="response.Add_this_condition_as_suspect">
+                      </div>
+                    </div>
+                   <div class="buttons_to_save">
+                  <div class="but1">
+                        <button (click)="save()" data-bs-dismiss="modal" aria-label="Close">Save</button>
+                    </div>
+                        <button (click)="addNewResponse()">Add New Response</button>
+                      
+                    </div>
+                  </div>
+            </div>
+        
+        </div>
+    </div>
+  </div> -->
+<!-- Model for cpt Gen -->
+  <p-dialog header="{{cpt_gen.title}}" [(visible)]="showcpt" [modal]="true" [style]="{width: '50%'}" [baseZIndex]="10000">
+    <div>
+        <div>
+            <label>If value entered is:</label>
+            <select [(ngModel)]="cpt_gen.If_value_entered_is">
+                <option [value]="'Equals'" selected>Equal</option>
+                <option [value]="'Between'">Between</option>
+            </select>
+        </div>
+        <div>
+            <label>Qualifier value:</label>
+            <input type="number" [(ngModel)]="cpt_gen.Qualifier_value">
+        </div>
+        <div>
+            <label>Generate procedural code:</label>
+            <input type="text" [(ngModel)]="cpt_gen.Generate_procedural_code">
+        </div>
+        <!-- Dynamic input fields for new responses -->
+        <div *ngFor="let response of newResponses">
+            <p>----------------------------------------------------------------------</p>
+            <div>
+                <label>If value entered is:</label>
+                <select [(ngModel)]="response.If_value_entered_is">
+                    <option [value]="'Equal'" selected>Equal</option>
+                    <option [value]="'Between'">Between</option>
+                </select>
+            </div>
+            <div>
+                <label>Qualifier value:</label>
+                <input type="number" [(ngModel)]="response.Qualifier_value">
+            </div>
+            <div>
+                <label>Add this condition as suspect:</label>
+                <input type="text" [(ngModel)]="response.Add_this_condition_as_suspect">
+            </div>
+        </div>
+        <div class="buttons_to_save">
+            <div class="but1">
+                <button (click)="save()" type="button">Save</button>
+            </div>
+            <button (click)="addNewResponse()" type="button">Add New Response</button>
+        </div>
+    </div>
+</p-dialog>
+
+
+<!-- Modal fro response post  -->
+<p-dialog header="Response Values" [(visible)]="showresponse" [modal]="true" [style]="{width: '50%'}" [baseZIndex]="10000">
+  <div class="containresponse" *ngIf="showresdata">    
+      <div *ngFor="let item of field_response">
+          <label for="text">Response Value</label>
+          <input type="text" [value]="item.name">
+          <br>
+          <label for="Active">Ideal Choice?</label>
+          <input type="checkbox" [checked]="item.ideal_choice">
+          <br>
+          <label for="Active">Status</label>
+          <select [(ngModel)]="item.active">
+              <option value="true">Active</option>
+              <option value="false">Deactive</option>
+          </select>
+          <br>
+          <p>--------------------------------------------------------------------</p>
+      </div>
+  </div>
+  <form>
+      <div class="form-group">
+          <label for="name">Response Value:</label>
+          <input type="text" class="form-control" id="name" name="name" [(ngModel)]="formData.name">
+      </div>
+      <div class="form-group">
+          <label for="subscribe">Ideal Choice?</label>
+          <input type="checkbox" class="form-check-input" id="subscribe" name="subscribe" [(ngModel)]="formData.subscribe">
+      </div>
+      <div class="form-group">
+          <label for="status">Status:</label>
+          <select class="form-control" id="status" name="status" [(ngModel)]="formData.status">
+              <option value=true>Active</option>
+              <option value=false>Inactive</option>
+          </select>
+      </div>
+      <button type="submit" class="btn btn-primary" (click)="submitresponse()" class="btn btn-secondary" pButton label="Submit" icon="pi pi-check" data-dismiss="modal"></button>
+  </form>
+</p-dialog>
+
+
+
+
+
+<!-- keep this code separate -->
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Dynamic Datagrid</h5>
+                <div class="close_button">
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <label for="id">Field Name</label>
+                    <input type="text" formControlName="name">
+                    <label for="field_tooltip">Tooltip</label>
+                    <input type="text" formControlName="field_tooltip">
+                    <label for="field_type_id">Field Type</label>
+                    <select formControlName="field_type_id" id="field_type_id"  (change)="onSelectionChange($event)">
+                        <option value=1>Text</option>
+                         <option value=2>Textarea</option>
+                         <option value=3>Dropdown</option>
+                         <option value=4>Multiselect</option>
+                         <option value=5>Calculated</option>
+                      </select>
+
+                      <div *ngIf="form.value.field_type_id === '3'||form.value.field_type_id === '4'">
+                        <button type="button" (click)="addOption()">Add Option</button>
+                        <div *ngFor="let option of options; let i=index">
+                          <input type="text" #optionInput (blur)="updateOption(i, optionInput.value)" [value]="option" placeholder="Option {{i + 1}}">
+                        </div>
+                      </div>
+
+                      <div *ngIf="form.value.field_type_id === '5'">
+                               <h5 style="color: rgb(146, 146, 243);">Build Calculation</h5>
+
+                               <form [formGroup]="CalculationForm" (ngSubmit)="calculationSubmit()">
+                                <div>
+                                  <label for="calc_field1">Calc Field 1</label>
+                                  <select formControlName="calc_field1" (change)="toggleControls('calc_field1_transformation')">
+                              
+                                    <option value="" disabled selected></option>
+                                    <option *ngFor="let field of Is_integer_only" [value]="field.id">
+                                      {{ field.name }}
+                                    </option>
+                                  </select>
+                                  
+                                </div>
+                              
+                                <div>
+                                  <label for="calc_field1_transformation">Calc Field 1 Transformation</label>
+                                  <select formControlName="calc_field1_transformation" (change)="toggleControls('mid_operator')">
+                                    <option value="" disabled selected></option>
+                                    <option value="None">None</option>
+                                    <option value="Squared">Squared</option>
+                                  </select>
+                                </div>
+                                <div>
+                                  <label for="mid_operator">Mid Operator</label>
+                                  <select formControlName="mid_operator" (change)="toggleControls('calc_field2')">
+                                    <option value="" disabled selected></option>
+                                    <option value="Plus">+ Plus</option>
+                                    <option value="Minus">- Minus</option>
+                                    <option value="Divide">/ Divide</option>
+                                    <option value="Multiply">X Multiply</option>
+
+                                  </select>
+                                </div>
+                              
+                                <div>
+                                  <label for="calc_field2">Calc Field 2</label>
+                                  <select formControlName="calc_field2" (change)="toggleControls('calc_field2_transformation');Builder_preview()">
+
+                                    <option value="" disabled selected></option>
+                                    <option *ngFor="let field of Is_integer_only" [value]="field.id">
+                                      {{ field.name }}
+                                    </option>
+                                  </select>
+                                  
+                                </div>
+                                <div>
+                                  <label for="calc_field2_transformation">Calc Field 2 Transformation</label>
+                                  <select formControlName="calc_field2_transformation" (change)="toggleControls('enable_post_operator');Builder_preview()">
+
+                                    <option value="" disabled selected></option>
+                                    <option value="None">None</option>
+                                    <option value="Squared">Squared</option>
+                                  </select>
+                                </div>
+                              
+                                <div class="checkbox-container">
+                                  <input id="enable_post_operator" formControlName="enable_post_operator" type="checkbox">
+                                  <label for="enable_post_operator">Enable Post Operator (run another calculation on the above)</label>
+                                </div>
+                                
+
+                             <div *ngIf="CalculationForm.get('enable_post_operator').value">
+                                <div>
+                                  <label for="post_operator">Post Operator</label>
+                                  <select formControlName="post_operator" (change)="post_operator()">
+                                    <option value="" disabled selected></option>
+                                    <option value="Plus">+ Plus</option>
+                                    <option value="Minus">- Minus</option>
+                                    <option value="Divide">/ Divide</option>
+                                    <option value="Multiply">X Multiply</option>
+
+                                  </select>
+                                </div>
+                              
+                                <div>
+                                  <label for="post_operator_val">Post Operator Value</label>
+                                  <input id="post_operator_val" formControlName="post_operator_val" type="number" (keyup)="assign_new_value()"> 
+                                </div>
+                              </div> 
+                               
+
+                              
+                            </form>
+
+                              <div class="calculation_preview">
+                                <h5>Calculation Preview</h5>
+                                <div *ngIf="show_builder">
+                                <p>({{(first_value)}})<sup>{{field1_transformation}}</sup> {{operator}} ({{(second_valu)}})<sup>{{field2_transformation}}</sup>{{operator2}}{{value}}</p>
+                              </div>
+                            </div>
+                      </div>
+
+
+
+                      <label for="id">Status</label>
+                      <select formControlName="status" id="status">
+                        <option [value]=true>Active</option>
+                        <option [value]=false>Deactive</option>
+                      </select>
+                      <label>
+                        <input type="checkbox" formControlName="is_required">
+                        Is Required ?
+                      </label>
+                    
+                      <label>
+                        <input type="checkbox" formControlName="show_in_tabular">
+                        Display as a column in Tabular
+                      </label>
+                    
+                      <label>
+                        <input type="checkbox" formControlName="show_in_detail">
+                        Field view and edit mode
+                      </label>
+                    <button type="submit" data-bs-dismiss="modal" aria-label="Close">Submit</button>
+                  </form>
+                  
+               
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" (click)="saveChanges()" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+            </div> -->
+        </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- popup for delete -->
+
+  <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Create New Dynamic Datagrid</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body1">
+                <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                    <label for="id">Field Name</label>
+                    <input type="text" formControlName="name">
+                    <label for="field_tooltip">Tooltip</label>
+                    <input type="text" formControlName="field_tooltip">
+                    <label for="field_type_id">Field Type</label>
+                    <select formControlName="field_type_id" id="field_type_id">
+                        <option value=1>Text</option>
+                         <option value=2>Textarea</option>
+                      </select>
+                      <label for="id">Status</label>
+                      <select formControlName="status" id="status">
+                        <option [value]=true>Active</option>
+                        <option [value]=false>Deactive</option>
+                      </select>
+                      <label>
+                        <input type="checkbox" formControlName="is_required">
+                        Is Required ?
+                      </label>
+                    
+                      <label>
+                        <input type="checkbox" formControlName="show_in_tabular">
+                        Display as a column in Tabular
+                      </label>
+                    
+                      <label class="final">
+                        <input type="checkbox" formControlName="show_in_detail">
+                        Field view and edit mode
+                      </label>
+                    <button type="submit" data-bs-dismiss="modal" aria-label="Close">Save</button>
+                  </form>
+                  
+               
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" (click)="saveChanges()" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+            </div> -->
+        </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- new popup for delete -->
+
+
+  <!-- <div class="modal fade" id="exampleModalScrollable1" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Delete Field</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+          <p>Data has already been stored to this field. 
+            Deleting the field can result in permanent data loss.
+             If you wish to continue, please type "permanently delete"
+              into the box below.</p>
+                <input type="text" [(ngModel)]="inputValue" placeholder="permanently delete">
+                <button (click)="DeletePermanantly()" data-bs-dismiss="modal" aria-label="Close">Confirm Delete</button>
+        </div>
+    </div>
+  </div> -->
+
+
+
+
+
+  <!--Model to delet the field -->
+
+
+
+  <p-dialog header="Delete Field" [(visible)]="displayDeleteModal" [modal]="true" [style]="{width: '400px'}" [dismissableMask]="true">
+   <hr>
+    <div>
+      <p>Data has already been stored to this field. 
+      Deleting the field can result in permanent data loss.
+      If you wish to continue, please type "permanently delete"
+      into the box below.</p>
+      <input type="text" pInputText [(ngModel)]="inputValue" placeholder="permanently delete" style="width: 100%;" />
+      <div class="p-d-flex p-jc-end" style="margin-top: 1rem;">
+        <button pButton label="Confirm Delete" icon="pi pi-check" class="p-button-danger" (click)="DeletePermanantly()" [disabled]="inputValue !== 'permanently delete'"></button>
+      </div>
+    </div>
+  </p-dialog>
+
+
+
+
+
+
+ 
+
+
+  
+
+ 

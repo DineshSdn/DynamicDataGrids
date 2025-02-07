@@ -1,0 +1,819 @@
+<div class="all">
+    <div class="d-flex mb-1 align-items-center">
+        <div class="flex-grow-1" *ngIf="showGridDetails">
+            <strong class="mb-0">{{data[0].head_name}} <span
+                    class="badge badge-secondary">{{data[0].name}}</span></strong>
+            <p>{{data[0].description}}</p>
+        </div>
+        <div class="ml-auto">
+            <a class="btn btn-primary rounded-pill" (click)="back()">Back to all datagrids</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p-checkbox class="mb-1" [(ngModel)]="chkHealthProfile" inputId="binary" [binary]="true" [disabled]="true">
+            </p-checkbox><label for='healthProfile' class="ml-1 mb-0">Show In Health Profile</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mt-3">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-4 mt-2"><span class="h6">Fields</span></div>
+                        <div class="col-md-8"><a class="btn btn-primary rounded-pill CreateField"
+                            data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" (click)="create()">Create New</a></div>
+                        </div>
+                </div>
+                <div class="list-group">
+                    <div class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-12">
+                                <input pInputText type="search" [(ngModel)]="searchQuery" placeholder="Search fields.."
+                                    class="form-control" (keyup)="search()" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body m-1 p-3" *ngIf="showDgFields">
+                    <div class="card mt-1" *ngFor="let item of filteredresponse.fields">
+                        <div class="card-body p-1">
+                            <div class="row m-1">
+                                <div class="col-md-6 ">
+                                    <p class="mb-0 fieldHeader">
+                                        <span class="dot dot-lg" [ngClass]="{'bg-danger': !item.status, 'bg-success': item.status }"></span>
+                                        {{item.name}} {{item.is_required ? "(required)" : ""}}
+                                      </p>
+                                    <span class="badge badge-secondary">{{item.field_type_name}}</span>
+                                </div>
+                                <div class="col-md-6 fieldFontxSmall pr-1 padTop">
+                                    <p class="mb-0">Show in Tabular: {{item.show_in_tabular ? "Yes":"No"}} (order
+                                        {{item.tabular_sort_order}})</p>
+                                    <p class="mb-0">Show in Detail: {{item.show_in_detail ? "Yes":"No"}} (order
+                                        {{item.detail_sort_order}})</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer p-0 fieldFooterBg">
+                            <div class="row m-1 fieldFooterFont">
+                                <div class="col-md-2 pt-1 footerEdit">
+                                    <a (click)="newFieldModel(item)" icon="pi pi-trash" class="p-button-danger" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">Edit</a>
+                                </div>
+                                <div class="col-md-2 p-1 footerEdit">
+                                    <a (click)="deleteField(item)"  icon="pi pi-trash" class="p-button-danger" (click)="openDeleteDialog()">Delete</a>
+                                </div>
+                                <div class="col-md-3 p-1 footerSuspect">
+                                    <a (click)="suspectModal(item); showsuspectmodel()" icon="pi pi-trash" class="p-button-danger" >Suspect ({{item.field_suspects != null ?
+                                        item.field_suspects.length : 1}})</a>
+                                </div>
+                                <div class="col-md-3 p-1 footerResponse">
+                                    <a (click)="responseModal(item);showresponsemodel(item.response_count)"  icon="pi pi-trash" class="p-button-danger">Responses ({{item.response_count}})</a>
+                                </div>
+                                <div class="col-md-3 p-1 footerCptGen">
+                                    <a (click)="cptGenModal(item);showcptmodel()" icon="pi pi-trash" class="p-button-danger">CPT Gen ({{item.field_cpt != null ?
+                                        item.field_cpt.length : 1}})</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8" *ngIf="showDgFields">
+            <div class="card mt-3" >
+                <div class="card-header">
+                    <span class="h6">Preview Tabular</span>
+                    <span style="float:right;">Drag and drop order of columns to change/set display order.</span>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary CreateField fieldFontxSmall ml-2 mb-1" disabled>Add
+                                New</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <table class="table table-sm  table-bordered" >
+                                <thead>
+                                    <tr cdkDropList cdkDropListOrientation="horizontal"
+                                        (cdkDropListDropped)="dropdaragField($event)">
+                                        <th cdkDrag class="badge-secondary fontColor fieldFontSize"
+                                            *ngFor="let item of hori_new_arrya" style="background-color: #999;">
+                                            <strong ><i class="fe fe-menu whiteColor cursor"></i></strong> {{item.name}}
+                                            <i *ngIf="item.field_tooltip != null"
+                                                class="pi pi-info-circle fieldFontSize whiteColor"
+                                                [pTooltip]="item.field_tooltip" tooltipPosition="top"></i>
+                                        </th>
+                                        <th class="badge-secondary fontColor fieldFontSize" style="background-color: #999;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td *ngFor="let item of hori_new_arrya"></td>
+                                        <td>
+                                            <button class="btn btn-primary fieldFontxSmall mr-1"
+                                                disabled>View/Edit</button>
+                                            <button class="btn btn-primary fieldFontxSmall" disabled>Delete</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3" >
+                <div class="card-header">
+                    <span class="h6">Preview Detail (view and edit modes)</span>
+                    <span style="float:right;">Drag and drop order of columns to change/set display order.</span>
+                </div>
+                <div class="card-body">
+                    <div cdkDropList cdkDragLockAxis="y" (cdkDropListDropped)="dropdaragVertical($event)">
+                        <div class="row" cdkDrag *ngFor="let item of filteredresponse.fields">
+                            <div class="col-1 viewDetailAlign" cdkDragHandle>
+                                <strong class="mb-0 alignRight"><i class="fe fe-menu cursor"></i></strong>
+                            </div>
+                            <div class="col-11 alighDetail">
+                                <div cdkDragHandle class="form-group"
+                                    *ngIf="item.field_type_id==1 && !item.is_integer_only">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize"
+                                            [pTooltip]="item.field_tooltip"></i>
+                                    </label>
+                                    <input pInputText type="text" class="form-control">
+                                </div>
+                                <div cdkDragHandle class="form-group"
+                                    *ngIf="item.field_type_id==1 && item.is_integer_only">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize"
+                                            [pTooltip]="item.field_tooltip"></i>
+                                    </label>
+                                    <input pInputText type="text" min="0" (keypress)="keyPressNumbers($event)"
+                                        class="form-control">
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==2">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize"
+                                            [pTooltip]="item.field_tooltip"></i>
+                                    </label>
+                                    <textarea pInputTextarea class="form-control textBoxHeight restrictResize"
+                                        rows="4"></textarea>
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id == 3">
+                                    <label>
+                                        {{item.name}}
+                                        <label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize" [pTooltip]="item.field_tooltip"></i>
+                                    </label>
+                                    <br>
+                                    <div class="dropdown-container">
+                                        <p-dropdown [options]="item.options" optionLabel="option" optionValue="id"
+                                            placeholder="Select Response" class="w-100 primeng-form-control input-sm restrictResize"
+                                            appendTo="body" style="width: 600px;"></p-dropdown>
+                                    </div>
+                                </div>
+                                
+                                
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==4">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize"
+                                            [pTooltip]="item.field_tooltip"></i>
+                                    </label>
+                                    <br>
+                                    <p-multiSelect [options]="item.options" [filter]="false"
+                                        panelStyleClass="filter-on" defaultLabel="Select Response"
+                                        [selectedItemsLabel]="'{0} items selected'" optionLabel="option" optionValue="id"
+                                        appendTo="body">
+                                        <p-header class="mychkall">
+                                            <span>Select All</span>
+                                        </p-header> 
+                                    </p-multiSelect>
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==5">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize"
+                                            [pTooltip]="item.field_tooltip"></i>
+                                    </label>
+                                    <!-- <p-calendar class="w-100 primeng-form-control" [monthNavigator]="true"
+                                        [yearNavigator]="true" yearRange="1900:2100" dateFormat="mm/dd/yy"
+                                        [readonlyInput]="true" [showIcon]="true">
+                                    </p-calendar> -->
+                                    <input pInputText type="text" class="form-control" disabled />
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==6">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize"
+                                            [pTooltip]="item.field_tooltip"></i>
+                                    </label>
+                                    <span class="p-input-icon-right w-100 primeng-form-control">
+                                        <input type="text" pInputText class="form-control" />
+                                        <i class="pi pi-search"></i>
+                                    </span>
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==7">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize"
+                                            [pTooltip]="item.field_tooltip"></i>
+                                    </label>
+                                    <input pInputText type="text" class="form-control" disabled />
+                                </div>
+                                <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==8">
+                                    <label>{{item.name}}<label class="required" *ngIf="item.is_required">*</label>
+                                        <i *ngIf="item.field_tooltip != null" class="pi pi-info-circle fieldFontSize"
+                                            [pTooltip]="item.field_tooltip"></i>
+                                    </label>
+                                    <textarea pInputTextarea class="form-control textBoxHeight restrictResize" rows="4"
+                                        disabled></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class="card mt-3">
+                            <div class="card-header">
+                                <span class="h6">Preview Multi-Line</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col align-self-end">
+                                        <button class="btn btn-primary CreateField mb-1" disabled>Save</button>
+                                        <button class="btn btn-primary CreateField ml-2 mb-1 mr-1" disabled>Ideal Choices</button>
+                                        <button class="btn btn-primary CreateField ml-2 mb-1 mr-1" disabled>Reset</button>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <table class="table table-sm  table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th class="badge-secondary fontColor">Field</th>
+                                                    <th class="badge-secondary fontColor">Response</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody cdkDropList (cdkDropListDropped)="dropdaragVertical($event)">
+                                                <tr cdkDrag cdkDragLockAxis="y" *ngFor="let item of filteredresponse.fields">
+                                                    <td cdkDragHandle><i class="fe fe-menu mr-1"></i>{{item.name}}<label
+                                                            class="required" *ngIf="item.is_required">*</label></td>
+                                                    <td cdkDragHandle>
+                                                        <div cdkDragHandle class="form-group"
+                                                            *ngIf="item.field_type_id==1 && !item.is_integer_only">
+                                                            <input pInputText type="text" class="form-control">
+                                                        </div>
+                                                        <div cdkDragHandle class="form-group"
+                                                            *ngIf="item.field_type_id==1 && item.is_integer_only">
+                                                            <input pInputText type="number" min="0"
+                                                                (keypress)="keyPressNumbers($event)" class="form-control">
+                                                        </div>
+                                                        <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==2">
+                                                            <textarea pInputTextarea
+                                                                class="form-control textBoxHeight restrictResize"
+                                                                rows="4"></textarea>
+                                                        </div>
+                                                        <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==3">
+                                                            <p-dropdown [options]="item.field_response" optionLabel="name"
+                                                                optionValue="id" placeholder="Select Response"
+                                                                class="w-100 primeng-form-control input-sm" appendTo="body">
+                                                            </p-dropdown>
+                                                        </div>
+                                                        <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==4">
+                                                            <p-multiSelect [options]="item.field_response" [filter]="false"
+                                                                panelStyleClass="filter-on" defaultLabel="Select Response"
+                                                                [selectedItemsLabel]="'{0} items selected'" optionLabel="name"
+                                                                optionValue="id" appendTo="body">
+                                                                <p-header class="mychkall">
+                                                                    <span>Select All</span>
+                                                                </p-header>
+                                                            </p-multiSelect>
+                                                        </div>
+                                                        <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==5">
+                                                            <p-calendar class="w-100 primeng-form-control" [monthNavigator]="true"
+                                                                [yearNavigator]="true" yearRange="1900:2100" dateFormat="mm/dd/yy"
+                                                                [readonlyInput]="true" [showIcon]="true">
+                                                            </p-calendar>
+                                                        </div>
+                                                        <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==6">
+                                                            <span class="p-input-icon-right w-100 primeng-form-control">
+                                                                <input type="text" pInputText class="form-control" />
+                                                                <i class="pi pi-search"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==7">
+                                                            <input pInputText type="text" class="form-control" disabled />
+                                                        </div>
+                                                        <div cdkDragHandle class="form-group" *ngIf="item.field_type_id==8">
+                                                            <textarea pInputTextarea
+                                                                class="form-control textBoxHeight restrictResize" rows="4"
+                                                                disabled></textarea>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+    <!-- create new -->
+    <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalScrollableTitle">Dynamic Datagrid</h5>
+                    <div class="close_button">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="modal-body">
+                    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                        <label for="id">Field Name</label>
+                        <input type="text" formControlName="name">
+                        <label for="field_tooltip">Tooltip</label>
+                        <input type="text" formControlName="field_tooltip">
+                        <label for="field_type_id">Field Type</label>
+                        <select formControlName="field_type_id" id="field_type_id"  (change)="onSelectionChange($event)">
+                             <!-- <option value=1>Text</option>
+                             <option value=2>Textarea</option>
+                             <option value=3>Dropdown</option>
+                             <option value=4>Multiselect</option>
+                             <option value=5>Calculated</option> -->
+                             <option *ngFor="let option of option_list" [value]="option.id">
+                                {{ option.name }}
+                              </option>
+                          </select>
+    
+                          <div *ngIf="form.value.field_type_id === '3'||form.value.field_type_id === '4'">
+                            <button type="button" (click)="addOption()">Add Option</button>
+                            <div *ngFor="let option of options; let i=index">
+                              <input type="text" #optionInput (blur)="updateOption(i, optionInput.value)" [value]="option" placeholder="Option {{i + 1}}">
+                            </div>
+                          </div>
+    
+                          <div *ngIf="form.value.field_type_id === '5'">
+                                   <h5 style="color: rgb(146, 146, 243);">Build Calculation</h5>
+    
+                                   <form [formGroup]="CalculationForm" (ngSubmit)="calculationSubmit()">
+                                    <div>
+                                      <label for="calc_field1">Calc Field 1</label>
+                                      <select formControlName="calc_field1" (change)="toggleControls('calc_field1_transformation')">
+                                  
+                                        <option value="" disabled selected></option>
+                                        <option *ngFor="let field of Is_integer_only" [value]="field.id">
+                                          {{ field.name }}
+                                        </option>
+                                      </select>
+                                      
+                                    </div>
+                                    <div>
+                                      <label for="calc_field1_transformation">Calc Field 1 Transformation</label>
+                                      <select formControlName="calc_field1_transformation" (change)="toggleControls('mid_operator')">
+                                        <option value="" disabled selected></option>
+                                        <option value="None">None</option>
+                                        <option value="Squared">Squared</option>
+                                      </select>
+                                    </div>
+                                    <div>
+                                      <label for="mid_operator">Mid Operator</label>
+                                      <select formControlName="mid_operator" (change)="toggleControls('calc_field2')">
+                                        <option value="" disabled selected></option>
+                                        <option value="Plus">+ Plus</option>
+                                        <option value="Minus">- Minus</option>
+                                        <option value="Divide">/ Divide</option>
+                                        <option value="Multiply">X Multiply</option>
+    
+                                      </select>
+                                    </div>
+                                  
+                                    <div>
+                                      <label for="calc_field2">Calc Field 2</label>
+                                      <select formControlName="calc_field2" (change)="toggleControls('calc_field2_transformation');Builder_preview()">
+    
+                                        <option value="" disabled selected></option>
+                                        <option *ngFor="let field of Is_integer_only" [value]="field.id">
+                                          {{ field.name }}
+                                        </option>
+                                      </select>
+                                      
+                                    </div>
+                                    <div>
+                                      <label for="calc_field2_transformation">Calc Field 2 Transformation</label>
+                                      <select formControlName="calc_field2_transformation" (change)="toggleControls('enable_post_operator');Builder_preview()">
+    
+                                        <option value="" disabled selected></option>
+                                        <option value="None">None</option>
+                                        <option value="Squared">Squared</option>
+                                      </select>
+                                    </div>
+                                  
+                                    <div class="checkbox-container">
+                                      <input id="enable_post_operator" formControlName="enable_post_operator" type="checkbox">
+                                      <label for="enable_post_operator">Enable Post Operator (run another calculation on the above)</label>
+                                    </div>
+                                    
+    
+                                 <div *ngIf="CalculationForm.get('enable_post_operator').value">
+                                    <div>
+                                      <label for="post_operator">Post Operator</label>
+                                      <select formControlName="post_operator" (change)="post_operator()">
+                                        <option value="" disabled selected></option>
+                                        <option value="Plus">+ Plus</option>
+                                        <option value="Minus">- Minus</option>
+                                        <option value="Divide">/ Divide</option>
+                                        <option value="Multiply">X Multiply</option>
+    
+                                      </select>
+                                    </div>
+                                  
+                                    <div>
+                                      <label for="post_operator_val">Post Operator Value</label>
+                                      <input id="post_operator_val" formControlName="post_operator_val" type="number" (keyup)="assign_new_value()"> 
+                                    </div>
+                                  </div> 
+                                   
+    
+                                  
+                                </form>
+    
+                                  <div class="calculation_preview">
+                                    <h5>Calculation Preview</h5>
+                                    <div *ngIf="show_builder">
+                                    <p>({{(first_value)}})<sup>{{field1_transformation}}</sup> {{operator}} ({{(second_valu)}})<sup>{{field2_transformation}}</sup>{{operator2}}{{value}}</p>
+                                  </div>
+                                </div>
+                          </div>
+    
+    
+    
+                          <label for="id">Status</label>
+                          <select formControlName="status" id="status">
+                            <option [value]=true>Active</option>
+                            <option [value]=false>Deactive</option>
+                          </select>
+                          <label>
+                            <input type="checkbox" formControlName="is_required">
+                            Is Required ?
+                          </label>
+                        
+                          <label>
+                            <input type="checkbox" formControlName="show_in_tabular">
+                            Display as a column in Tabular
+                          </label>
+                        
+                          <label class="Final">
+                            <input type="checkbox" formControlName="show_in_detail">
+                            Field view and edit mode
+                          </label>
+                          
+                    </form>
+                      
+                   
+                </div>
+                <div class="modal-footer">
+                    <div  class="final_button">
+                        <button type="submit" data-bs-dismiss="modal" aria-label="Close" (click)="onSubmit()">Save</button>
+                    </div>  
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <!--Model to delete the field -->
+  <p-dialog  class="delete_field" header="Delete Field" [(visible)]="displayDeleteModal" [modal]="true" [style]="{width: '45%'}" [dismissableMask]="true">
+     <div>
+        <div class="header_body" style="border-top: 1px solid rgb(228, 226, 226);"></div>
+        <div class="main_body" style="padding-top: 2%;">
+       
+       <p>Data has already been stored to this field. 
+       Deleting the field can result in permanent data loss.
+       If you wish to continue, please type "permanently delete"
+       into the box below.</p>
+       <input type="text" pInputText [(ngModel)]="inputValue" placeholder="permanently delete" style="width: 100%;" />
+    </div>
+       <div class="footer_body">
+       <div class="p-d-flex p-jc-end" style="margin-top: 1rem;">
+         <button pButton label="Confirm Delete" icon="pi pi-check" style="color: rgb(64, 64, 167); " (click)="DeletePermanantly()" [disabled]="inputValue !== 'permanently delete'"></button>
+       </div>
+    </div>
+     </div>
+   </p-dialog>
+
+ <!-- Modal fro response post  -->
+ <p-dialog header="Response Values" [(visible)]="showresponse" [modal]="true" [style]="{width: '50%'}" [baseZIndex]="10000">
+    <div class="containresponse" *ngIf="response_count_check">   
+        <div *ngFor="let item of field_response" class="response-item">
+            <label for="text">Response Value</label>
+            <input type="text" [value]="item.name" class="form-control">
+            
+            <label for="Active" class="ideal-choice-label">Ideal Choice?</label>
+            <input type="checkbox" [checked]="item.ideal_choice" class="ideal-choice-checkbox">
+            
+            <label for="Active" class="status-label">Status</label>
+            <select [(ngModel)]="item.active" class="status-select">
+                <option value="true">Active</option>
+                <option value="false">Deactive</option>
+            </select>
+        </div>
+        
+        <style>
+            .response-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px; /* Adjust spacing between items */
+            }
+        
+            .response-item label {
+                width: 120px; /* Adjust label width as needed */
+                margin-right: 10px; /* Adjust space between label and input */
+            }
+        
+            .response-item input[type="text"],
+            .response-item input[type="checkbox"],
+            .response-item select {
+                flex: 1; /* Take remaining space */
+                margin-right: 10px; /* Adjust space between input elements */
+            }
+        
+            .ideal-choice-label {
+                margin-left: 20px; /* Adjust space between previous input and checkbox */
+            }
+        </style>
+    </div>
+    <form *ngIf="add_new_response" class="new-response-form">
+      
+        <div class="response-item"> 
+            <label for="name">Response Value:</label>
+            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="formData.name">
+
+            <label for="subscribe" class="ideal-choice-label">Ideal Choice?</label>
+            <input type="checkbox" class="ideal-choice-checkbox" id="subscribe" name="subscribe" [(ngModel)]="formData.subscribe">
+
+            <label for="status" class="status-label">Status:</label>
+            <select  id="status" name="status" [(ngModel)]="formData.status">
+                <option value=true>Active</option>
+                <option value=false>Inactive</option>
+            </select>
+      </div>
+    </form>
+    
+    <style>
+        .response-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px; /* Adjust spacing between items */
+        }
+    
+        .response-item label {
+            width: 120px; /* Adjust label width as needed */
+            margin-right: 10px; /* Adjust space between label and input */
+        }
+    
+        .response-item input[type="text"],
+        .response-item input[type="checkbox"],
+        .response-item select {
+            flex: 1; /* Take remaining space */
+            margin-right: 10px; /* Adjust space between input elements */
+        }
+    
+        .ideal-choice-label {
+            margin-left: 20px; /* Adjust space between previous input and checkbox */
+        }
+    </style>
+    
+    
+    
+    <div class="footer">
+        <button type="submit" class="btn btn-primary" (click)="submitresponse()" pButton label="Save"  data-dismiss="modal" style="margin-left: 10%;"></button>
+        <button  class="btn btn-primary" (click)="add_new_response_enable()"style="margin-left:65%;background-color:blue-button;">Add New Response</button>
+     
+    </div>
+</p-dialog>
+
+<style>
+    .containresponse {
+        padding: 10px; /* Adjust as needed */
+    }
+
+    .footer {
+        text-align: right;
+        padding: 10px; /* Adjust as needed */
+     /* Example background color */
+        border-top: 1px solid #ccc; /* Example border */
+        margin-top: 10px; /* Adjust as needed */
+    }
+
+    .footer button {
+        margin-left: 10px; /* Adjust as needed */
+    }
+</style>
+
+
+   <!-- model for suspect -->
+   <p-dialog header="{{suspect.Title}}" [(visible)]="showsuspect" [modal]="true" [style]="{width: '50%'}" [baseZIndex]="10000">
+    <style>
+        .dialog-content {
+            padding: 20px;
+        }
+        .dialog-content label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .dialog-content .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .dialog-content select,
+        .dialog-content input[type="number"],
+        .dialog-content input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .dialog-content select,
+        .dialog-content input[type="number"] {
+            flex: 1;
+        }
+        .dialog-content .dynamic-response {
+            border-top: 1px solid #ccc;
+            margin-top: 20px;
+            padding-top: 20px;
+        }
+        .dialog-content .buttons_to_save {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dialog-content .buttons_to_save button {
+            background-color: #1f28a1; /* Purple color */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .dialog-content .buttons_to_save button:hover {
+            background-color: #1f28a1; /* Darker purple */
+        }
+    </style>
+    <div class="dialog-content">
+        <div class="input-group">
+            <div style="flex: 1;">
+                <label>If value entered is:</label>
+                <select [(ngModel)]="suspect.If_value_entered_is">
+                    <option [value]="'Equal'" selected>Equal</option>
+                    <option [value]="'Between'">Between</option>
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label>Qualifier value:</label>
+                <input type="number" [(ngModel)]="suspect.Qualifier_value">
+            </div>
+        </div>
+        <div>
+            <label>Add this condition as suspect:</label>
+            <input type="text" [(ngModel)]="suspect.Add_this_condition_as_suspect">
+        </div>
+        
+        <!-- Dynamic input fields for new responses -->
+        <div *ngFor="let response of newResponses" class="dynamic-response">
+            <div class="input-group">
+                <div style="flex: 1;">
+                    <label>If value entered is:</label>
+                    <select [(ngModel)]="response.If_value_entered_is">
+                        <option [value]="'Equal'" selected>Equal</option>
+                        <option [value]="'Between'">Between</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <label>Qualifier value:</label>
+                    <input type="number" [(ngModel)]="response.Qualifier_value">
+                </div>
+            </div>
+            <div>
+                <label>Add this condition as suspect:</label>
+                <input type="text" [(ngModel)]="response.Add_this_condition_as_suspect">
+            </div>
+        </div>
+        <div class="buttons_to_save">
+            <div class="but1" style="padding-top:4%">
+                <button (click)="save()" type="button" style="margin-right:450px ;">Save</button>
+                <button (click)="addNewResponse()" type="button" >Add New Response</button>
+            </div>
+           
+        </div>
+    </div>
+</p-dialog>
+
+  <!-- Model for cpt Gen -->
+  <p-dialog header="{{cpt_gen.title}}" [(visible)]="showcpt" [modal]="true" [style]="{width: '50%'}" [baseZIndex]="10000">
+    <style>
+        .dialog-content {
+            padding: 20px;
+        }
+        .dialog-content label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .dialog-content .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .dialog-content select,
+        .dialog-content input[type="number"],
+        .dialog-content input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .dialog-content select,
+        .dialog-content input[type="number"] {
+            flex: 1;
+        }
+        .dialog-content .dynamic-response {
+            border-top: 1px solid #ccc;
+            margin-top: 20px;
+            padding-top: 20px;
+        }
+        .dialog-content .buttons_to_save {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .dialog-content .buttons_to_save button {
+            background-color: #1f28a1; /* Purple color */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .dialog-content .buttons_to_save button:hover {
+            background-color: #1f28a1; /* Darker purple */
+        }
+    </style>
+    <div class="dialog-content">
+        <div class="input-group">
+            <div style="flex: 1;">
+                <label>If value entered is:</label>
+                <select [(ngModel)]="cpt_gen.If_value_entered_is">
+                    <option [value]="'Equal'" selected>Equal</option>
+                    <option [value]="'Between'">Between</option>
+                </select>
+            </div>
+            <div style="flex: 1;">
+                <label>Qualifier value:</label>
+                <input type="number" [(ngModel)]="cpt_gen.Qualifier_value">
+            </div>
+        </div>
+        <div>
+            <label>Add this condition as suspect:</label>
+            <input type="text" [(ngModel)]="cpt_gen.Genrate_prodecural_code">
+        </div>
+        
+        <!-- Dynamic input fields for new responses -->
+        <div *ngFor="let response of newResponses" class="dynamic-response">
+            <div class="input-group">
+                <div style="flex: 1;">
+                    <label>If value entered is:</label>
+                    <select [(ngModel)]="response.If_value_entered_is">
+                        <option [value]="'Equal'" selected>Equal</option>
+                        <option [value]="'Between'">Between</option>
+                    </select>
+                </div>
+                <div style="flex: 1;">
+                    <label>Qualifier value:</label>
+                    <input type="number" [(ngModel)]="response.Qualifier_value">
+                </div>
+            </div>
+            <div>
+                <label>Add this condition as suspect:</label>
+                <input type="text" [(ngModel)]="response.Add_this_condition_as_suspect">
+            </div>
+        </div>
+        <div class="buttons_to_save">
+            <div class="but1" style="padding-top:4%">
+                <button (click)="save()" type="button" style="margin-right:450px ;">Save</button>
+                <button (click)="addNewResponse()" type="button" >Add New Response</button>
+            </div>
+           
+        </div>
+    </div>
+</p-dialog>

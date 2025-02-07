@@ -1,0 +1,125 @@
+<div class="heading">
+   <h3 style="color: rgb(5, 5, 109);"> Clinical Assets</h3>
+<p> Configure and build assessment materials, coding guidelines and clinical reference material.
+</p></div>
+
+
+<div>
+    <div class="contain">
+           <div class="d-flex mb-1 align-items-center">        
+            <div class="flex-grow-1">
+                <strong class="mb-0">Dynamic Data Grids</strong>
+                <p>Data grids are a way of capturing structured or semi-structured data as part of your encounter and longitudinal care delivery workflows.</p>
+            </div>   
+            
+            <div class="ml-auto">
+              <a class="btn btn-primary rounded-pill" (click)="openModal(null);" 
+              data-bs-toggle="modal" data-bs-target="#exampleModalScrollable"><i 
+              class="fe fe-plus"></i>+ Create New</a>
+          </div>
+          
+    </div>
+    <div class="container-fluid" *ngIf="loaderStatus">
+        <div class="row">
+            <div class="col-12 text-center">
+                
+            </div>
+        </div>
+    </div>
+    <div class="list-group mb-5 shadow mt-3">
+        <div class="list-group-item"  *ngFor="let item of data">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <strong class="mb-0">{{item.head_name}} <span class="dot dot-lg "
+                        [ngClass]="{'bg-danger': item.active==false, 'bg-success': item.active==true }"></span></strong>
+                    <p class="mb-0"><span class="badge badge-secondary">{{item.name}}</span> {{item.description}}</p>
+                </div>
+                <div class="col-4 text-right">
+                    <a (click)="newDynamicGridModal(item);"  data-bs-toggle="modal" data-bs-target="#exampleModalScrollable" icon="pi pi-trash" class="p-button-danger">Edit</a>
+                    <a  (click)="viewDataGrid(item)" style="margin-left: 20px;" icon="pi pi-trash" class="p-button-danger">Launch Editor</a>
+                </div>
+            </div>
+        </div>    
+    </div>
+</div>
+
+</div>
+ 
+
+<!-- from here -->
+
+<div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalScrollableTitle">Create New Dynamic Datagrid</h5>
+              <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="dynamicGridForm" (ngSubmit)="onSubmit()" #form="ngForm">
+                <div>
+                    <div>
+                        <label for="type">Choose Type:</label>
+                        <select id="type" formControlName="type">
+                        <!-- <div *ngFor="let type of options_data.dynamicGridTypes">
+                          <option value=type.id>{{type.na}}</option>
+                        </div> -->
+                        <option value="1">Tabular</option>
+                          <option value="2">Multi-Line</option>
+                        </select>
+                      </div>
+                      
+                  <label for="name">Name:</label>
+                  <input type="text" id="name" formControlName="name">
+                  <div *ngIf="dynamicGridForm.get('name')?.invalid && dynamicGridForm.get('name')?.touched">
+                    <div *ngIf="dynamicGridForm.get('name')?.errors"><p style="color: Red;"> Name is required.</p></div>
+                  </div>
+                </div>
+                <div>
+                  <label for="description">Description:</label>
+                  <textarea id="description" formControlName="description"></textarea>
+                  <div *ngIf="dynamicGridForm.get('description')?.invalid && dynamicGridForm.get('description')?.touched">
+                    <div *ngIf="dynamicGridForm.get('description')?.errors"><p style="color: Red;"> Description is required.</p></div>
+                   
+                  </div>
+                </div>
+                <div>
+                    <label for="status">Status:</label>
+                    <select id="status" formControlName="active" >
+                        <option value=true selected>Active</option>
+                        <option value=false>Disabled</option>
+                    </select>
+                </div>
+                <!-- <div>
+                  <label for="type">Role:</label>
+                  <input type="number" id="type" formControlName="type">
+                </div> -->
+               
+               
+                <div>
+                  <label for="created_by">Sort Order:</label>
+                  <input type="number" id="created_by" formControlName="created_by">
+                </div>
+                
+                <div class="form-group-inline">
+                    <input type="checkbox" id="show_health_profile" formControlName="show_health_profile">
+                  <label for="show_health_profile">Show Health Profile:</label>
+                
+                </div>
+              </form>
+              
+          </div>
+          <div class="modal-footer">
+              <button type="submit" (click)="onSubmit()" [disabled]="dynamicGridForm.invalid" data-bs-dismiss="modal" aria-label="Close">Save</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+
+
+
+
+
